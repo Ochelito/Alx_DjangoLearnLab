@@ -1,3 +1,6 @@
+from bookshelf.models import Book
+
+
 DELETE:
 book = Book.objects.get(id=1)		#Retrieves the Book instance created to Delete
 book.delete()				#Deletes the particular instance specified
