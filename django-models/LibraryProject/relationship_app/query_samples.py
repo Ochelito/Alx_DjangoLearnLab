@@ -10,29 +10,28 @@ from relationship_app import Author, Book, Library, Librarian
 def get_books_by_author(author_name):
 
     try:
-        author = Author.objects.filter(author=author_name)
-        books = author.books.all()
-
-        print(f"\nBooks by {author.name}:")
-        for book in books:
+        author = Author.objects.get(name=author_name)
+        books_by_author = Book.objects.filter(author=author)
+       
+        print(f"Books by {author_name}:")
+        for book in books_by_author:
             print(f"- {book.title}")
-
+    
     except Author.DoesNotExist:
-        print(f"No author found with the name '{author_name}'.")
+        print(f"No author found with the name {author_name}")
 
 # 2. List all books in a library
 def get_books_by_library(library_name):
 
     try:
         library = Library.objects.get(name=library_name)
-        books = library.books.all()
-
-        print(f"\nBooks in the {library.name} library:")
-        for book in books:
+       
+        print(f"Books in {library_name}:")
+        for book in library.books.all():
             print(f"- {book.title}")
 
     except Library.DoesNotExist:
-        print(f"No Library found with the name '{library_name}'.")
+        print(f"No library found with the name {library_name}")
 
 # 3. Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
