@@ -38,12 +38,15 @@ def get_librarian_for_library(library_name):
 
     try:
         library = Library.objects.get(name=library_name)
-        if hasattr(library, 'librarians'):
-            print(f"\nLibrarian of {library.name} is {library.librarians.name}")
 
-        else:
-            print(f"\nNo Librarian assigned to '{library.name}' library")
+        librarian = library.librarians  #Reverse relation from the OneToOneField
+    
+        print(f"Librarian for {library_name}: {librarian.name}")
+
+    except Library.DoesNotExist:
+        print(f"No library found with the name {library_name}")
 
     except Librarian.DoesNotExist:
-        print(f"No Library found with the name '{library_name}'.")
+        print(f"No librarian assigned to {library_name}")
+
 
