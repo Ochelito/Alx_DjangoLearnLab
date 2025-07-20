@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
@@ -16,6 +19,12 @@ class LibraryDetailView(DetailView):
     def get_queryset(self):
         # Optimize DB access: prefetch related books and authors
         return Library.objects.prefetch_related('books__author')
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'relationship_app/register.html'
+
 
 
         
