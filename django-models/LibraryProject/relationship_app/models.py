@@ -5,22 +5,42 @@ from django.db import models
 class Author(models.Model):
     name = models.CharField(max_length=100)
     
+    def __str__(self):
+        return self.name
+    
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+
+    def __str__(self):
+        return f"{self.title} by {self.author}"
 
 class Library(models.Model):
     name = models.CharField(max_length=100)
     books = models.ManyToManyField(Book, related_name='libraries')
 
+    def __str__(self):
+        book_titles = ", ".join(book.title for book in self.books.all())
+        return f"{self.name} library with books: {book_titles}"
+
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
     library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name='librarians')
 
+    def __str__(self):
+        if self.library:
+            return f"{self.name} is the librarian for {self.library}"
+        else:
+            return f"{self.name} is not assigned to any library"
 
 
+""" 
+def __str__(self):
+        if self.library:
+            return f"{self.name} is the librarian for {self.library}" If self.library is None (because SET_NULL is allowed), this will print:
+John is the librarian for None — not ideal.
 
-""" Implementing Advanced Model Relationships in Django
+Implementing Advanced Model Relationships in Django
 mandatory
 Objective: Master Django’s ORM capabilities by creating a set of models that demonstrate the use of ForeignKey, ManyToMany, and OneToOne relationships. This task will help you understand how to model complex data relationships in a Django project effectively.
 
