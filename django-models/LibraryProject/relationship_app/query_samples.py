@@ -11,14 +11,12 @@ def get_books_by_author(author_name):
 
     try:
         author = Author.objects.get(name=author_name)
-        books_by_author = Book.objects.filter(author=author)
-       
-        print(f"Books by {author_name}:")
-        for book in books_by_author:
-            print(f"- {book.title}")
+        books = Book.objects.filter(author=author)
+
+        return books
     
     except Author.DoesNotExist:
-        print(f"No author found with the name {author_name}")
+        return []
 
 # 2. List all books in a library
 def get_books_by_library(library_name):
@@ -26,12 +24,10 @@ def get_books_by_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
        
-        print(f"Books in {library_name}:")
-        for book in library.books.all():
-            print(f"- {book.title}")
-
+        return library.books.all()
+    
     except Library.DoesNotExist:
-        print(f"No library found with the name {library_name}")
+        return []
 
 # 3. Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
@@ -39,13 +35,8 @@ def get_librarian_for_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
         librarian = Librarian.objects.get(library=library)
-    
-        print(f"Librarian for '{library_name}': {librarian.name}")
 
-    except Library.DoesNotExist:
-        print(f"Library '{library_name}' not found")
+        return librarian
 
-    except Librarian.DoesNotExist:
-        print(f"No librarian assigned to {library_name}")
-
-
+    except (Library.DoesNotExist, Librarian.DoesNotExist):
+        return None
