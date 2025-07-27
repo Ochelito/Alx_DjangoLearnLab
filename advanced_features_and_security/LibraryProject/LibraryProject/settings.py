@@ -23,7 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3(m$j!ya3g!)=$k^b795wsc!p-pt46!mwnqep7va#zl5e5@xye'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False   # Never True in production
+
+SECURE_BROWSER_XSS_FILTER = True    # Enables browsers XSS filters
+
+X_FRAME_OPTIONS = 'DENY'    # Prevents the site from being loaded in a frame
+
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Stops browsers from MIME-sniffing a response away from the declared content-type
+
+CSRF_COOKIE_SECURE = True   #Send session cookie over HTTPS only
+
+SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = []
 
@@ -43,6 +53,7 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
+# CSP middleware added for XSS protection
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,7 +62,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
+
+# Defining content security policy
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC =("'self'", 'https://trustedscripts.placeholder.com')
+CSP_STYLE_SRC = ("'self'", 'https://trustedstyles.placeholder.com')
 
 ROOT_URLCONF = 'LibraryProject.urls'
 

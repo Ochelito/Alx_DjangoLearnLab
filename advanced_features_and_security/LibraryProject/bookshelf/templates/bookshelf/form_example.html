@@ -1,0 +1,6 @@
+<!--Ensuring CSRF Protection in template with CSRF TOKEN -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
