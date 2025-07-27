@@ -41,7 +41,7 @@ SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 
 # Instruct browsers to only access site via HTTPS for a specified time
-SECURE_HSTS_SECOONDS = 31536000
+SECURE_HSTS_SECONDS = 31536000
 
 # To include all subdomains in the HSTS policy and to allow preloading
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
