@@ -35,6 +35,18 @@ CSRF_COOKIE_SECURE = True   #Send session cookie over HTTPS only
 
 SESSION_COOKIE_SECURE = True
 
+
+#HTTP Strict Transport Security
+# Redirect all non-HTTPS request to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Instruct browsers to only access site via HTTPS for a specified time
+SECURE_HSTS_SECOONDS = 31536000
+
+# To include all subdomains in the HSTS policy and to allow preloading
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 ALLOWED_HOSTS = []
 
 
