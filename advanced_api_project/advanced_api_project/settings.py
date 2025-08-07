@@ -39,7 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework', # Django REST Framework for building APIs
     'api',  # Your custom API app
+    'django-filter', # Django Filter for filtering querysets in APIs
 ]
+
+#Set default backend for all views
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
