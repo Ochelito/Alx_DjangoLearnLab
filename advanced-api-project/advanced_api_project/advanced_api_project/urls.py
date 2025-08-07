@@ -27,3 +27,5 @@ urlpatterns = [
     path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete'),  # Delete a book
 ]
 # This code sets up the URL routing for the advanced_api_project, linking URLs to their respective
+# views for handling book-related operations such as listing, creating, updating, and deleting books.
+# The admin URL is also included for managing the models through the Django admin interface.
