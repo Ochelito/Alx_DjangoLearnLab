@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.permissions import BasePermission 
@@ -41,7 +41,7 @@ class BookDetailView(generics.DetailAPIView):
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]   # Allow only logged in users to create a book; author set automatically
+    permission_classes = [IsAuthenticated, IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]   # Allow only logged in users to create a book; author set automatically
 
     def perform_create(self, serializer): # Saves the book with the current user as the author
         serializer.save(author=self.request.user) # 
@@ -50,7 +50,7 @@ class BookCreateView(generics.CreateAPIView):
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]  # Allow only logged in users and authors to update a book
+    permission_classes = [IsAuthenticated, IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]  # Allow only logged in users and authors to update a book
 
     def perform_update(self, serializer): # Saves the book with the current user as the author
         serializer.save() # Updates the book with the current user as the author
@@ -64,4 +64,4 @@ class BookUpdateView(generics.UpdateAPIView):
 class BookDeleteView(generics.DeleteAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]  # Allow only logged in users and authors to delete a book
+    permission_classes = [IsAuthenticated, IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]  # Allow only logged in users and authors to delete a book
