@@ -1,62 +1,71 @@
-from rest_framework.test import APITestCase
-from rest_framework import status
-from django.contrib.auth import get_user_model
-from api.models import Book
 from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+from api.models import YourModel  # Replace with your actual model
+from django.contrib.auth.models import User
 
-User = get_user_model()
 
-class BookAPITests(APITestCase):
-    """Test suite for Book API endpoints using APITestCase."""
+class YourModelAPITests(APITestCase):
 
     def setUp(self):
-        """Set up test user and a sample book."""
+        # Create a user for authentication
         self.user = User.objects.create_user(username='testuser', password='testpass')
-
-        # Create a book authored by the test user
-        self.book = Book.objects.create(
-            title='Test Book',
-            author=self.user,
-            publication_year=2021
-        )
-
-        # Authenticated client
         self.client.login(username='testuser', password='testpass')
 
-    def test_list_books(self):
-        """Test retrieving list of books (GET /books/)."""
-        url = reverse('book-list')  # Name from your urls.py
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Create test data
+        self.item1 = YourModel.objects.create(name='Test Item 1', description='First item')
+        self.item2 = YourModel.objects.create(name='Test Item 2', description='Second item')
 
-    def test_detail_book(self):
-        """Test retrieving a single book detail (GET /books/<pk>/)."""
-        url = reverse('book-detail', args=[self.book.pk])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Common URLs
+        self.list_url = reverse('yourmodel-list')  # DRF router name or manual path
+        self.detail_url = lambda pk: reverse('yourmodel-detail', args=[pk])
 
-    def test_create_book(self):
-        """Test creating a new book (POST /books/create/)."""
-        url = reverse('book-create')
-        data = {
-            'title': 'New Book',
-            'publication_year': 2022
-        }
-        response = self.client.post(url, data, format='json')
+    def test_create_item(self):
+        data = {'name': 'New Item', 'description': 'New description'}
+        response = self.client.post(self.list_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(YourModel.objects.count(), 3)
 
-    def test_update_book(self):
-        """Test updating an existing book (PUT /books/update/<pk>/)."""
-        url = reverse('book-update', args=[self.book.pk])
-        updated_data = {
-            'title': 'Updated Book',
-            'publication_year': 2021
-        }
-        response = self.client.put(url, updated_data, format='json')
+    def test_read_item_list(self):
+        response = self.client.get(self.list_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
 
-    def test_delete_book(self):
-        """Test deleting a book (DELETE /books/delete/<pk>/)."""
-        url = reverse('book-delete', args=[self.book.pk])
-        response = self.client.delete(url)
+    def test_read_item_detail(self):
+        response = self.client.get(self.detail_url(self.item1.pk), format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Test Item 1')
+
+    def test_update_item(self):
+        data = {'name': 'Updated Item', 'description': 'Updated description'}
+        response = self.client.put(self.detail_url(self.item1.pk), data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.item1.refresh_from_db()
+        self.assertEqual(self.item1.name, 'Updated Item')
+
+    def test_delete_item(self):
+        response = self.client.delete(self.detail_url(self.item1.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(YourModel.objects.count(), 1)
+
+    def test_filter_items(self):
+        response = self.client.get(self.list_url, {'name': 'Test Item 1'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Test Item 1')
+
+    def test_search_items(self):
+        response = self.client.get(self.list_url, {'search': 'First'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(any('First item' in item['description'] for item in response.data))
+
+    def test_order_items(self):
+        response = self.client.get(self.list_url, {'ordering': '-name'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        names = [item['name'] for item in response.data]
+        self.assertEqual(names, sorted(names, reverse=True))
+
+    def test_permission_enforcement(self):
+        self.client.logout()
+        response = self.client.get(self.list_url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
