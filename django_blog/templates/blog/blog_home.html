@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Django Blog</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">MyBlog</h1>
+            <nav>
+                <ul id="menu" class="menu">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Articles</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <button id="menu-toggle" class="menu-toggle">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h2>Welcome to My Blog</h2>
+            <p>Sharing knowledge, stories, and ideas.</p>
+        </div>
+    </section>
+
+    <!-- Blog Posts -->
+    <section class="posts container">
+        {% for post in posts %}
+        <article class="post-card">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            <div class="post-content">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.excerpt }}</p>
+                <a href="{% url 'post_detail' post.id %}" class="read-more">Read More →</a>
+            </div>
+        </article>
+        {% empty %}
+        <p>No posts available.</p>
+        {% endfor %}
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ year }} MyBlog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
