@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, get_user_model
-from .forms import CustomUserCreationForm, UserUpdateForm, ProfileForm, UserEditForm
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm, ProfileForm, UserEditForm, UserUpdateForm
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.views import View
@@ -8,8 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.models import User
 
-User = get_user_model()
 # Create your views here.
 class HomeView(TemplateView):
     template_name = 'blog/home.html'
