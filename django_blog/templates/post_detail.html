@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/post_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>{{ object.title }}</h1>
+<p>{{ object.content }}</p>
+<p>Author: {{ object.author.username }}</p>
+{% if request.user == object.author %}
+    <a href="{% url 'post-update' object.pk %}">Edit</a>
+    <a href="{% url 'post-delete' object.pk %}">Delete</a>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/post_list.js' %}"></script>
+{% endblock %}

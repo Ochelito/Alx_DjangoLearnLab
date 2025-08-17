@@ -36,13 +36,14 @@
     </nav>
     {% block content %}{% endblock %}ndblock %}
 
+    {% block content %}{% endblock %}
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block extra_js %}{% endblock %}
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; {{ year }} MyBlog. All rights reserved.</p>
         </div>
     </footer>
-
-    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

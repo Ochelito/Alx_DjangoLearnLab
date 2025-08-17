@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from .forms import CustomUserCreationForm, ProfileForm, UserEditForm, UserUpdateForm
+from .forms import CustomUserCreationForm, ProfileForm, UserEditForm, UserUpdateForm, PostForm
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin 
-from django.views.generic import TemplateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import TemplateView, UpdateView, ListView, DetailView, CreateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
+from .models import Post
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -68,3 +69,43 @@ class ProfileView(LoginRequiredMixin, TemplateView):
             'user_form': user_form,
             'profile_form': profile_form
         })
+    
+# List all posts
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']
+
+# View single post
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+
+# Create a new post
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+# Edit a post (only by author)
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_form.html'
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+# Delete a post (only by author)
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'post_confirm_delete.html'
+    success_url = reverse_lazy('post-list')
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
