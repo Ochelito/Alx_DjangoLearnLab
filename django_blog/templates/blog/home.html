@@ -2,6 +2,10 @@
 
 {% block title %}Home | My Django Blog{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="hero">
     <div class="container">
@@ -24,4 +28,8 @@
     <p>No posts available.</p>
     {% endfor %}
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/login.js' %}"></script>
 {% endblock %}
