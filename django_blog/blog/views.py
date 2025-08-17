@@ -38,7 +38,7 @@ class CustomLoginView(LoginView):
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy("login")
 
-class ProfileView(LoginRequiredMixin, TemplateView):
+class ProfileView(LoginRequiredMixin, View):
     template_name = 'blog/profile.html'
 
     def get(self, request, *args, **kwargs):
