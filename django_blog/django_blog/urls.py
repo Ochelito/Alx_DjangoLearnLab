@@ -24,3 +24,5 @@ urlpatterns = [
     path('', include('blog.urls')),  # Include blog app URLs
     path('accounts/', include('django.contrib.auth.urls')),  # Include auth URLs
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

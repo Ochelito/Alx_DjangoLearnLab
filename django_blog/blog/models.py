@@ -23,10 +23,8 @@ class Profile(models.Model):
 # Automatically create or update the user profile when a User instance is created or updated    
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    else:
-        instance.profile.save()
+    Profile.objects.get_or_create(user=instance)
+    instance.profile.save()
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -34,3 +32,5 @@ class Post(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
     
+    def __str__(self):
+        return self.title

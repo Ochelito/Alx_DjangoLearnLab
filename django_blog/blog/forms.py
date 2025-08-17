@@ -1,13 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from .models import Profile, CustomUser
+from django.conf import settings
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
@@ -16,6 +17,14 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+#Edit basic user info
+class UserUpdateForm(forms.MedolForm):
+    class Meta:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        model = User
+        fields = ("username", "email")
     
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -30,7 +39,7 @@ class ProfileForm(forms.ModelForm):
 
 class UserEditForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['username', 'email']
 
     def save(self, commit=True):

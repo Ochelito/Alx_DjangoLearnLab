@@ -24,7 +24,6 @@ SECRET_KEY = 'django-insecure-q#r6p8^w92p9(!fa1g7c^b)xjl#x52)#@l$sw6nm4_mkbwxu$x
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -124,7 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 #URL to access static files in browser
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 #folder where Django colects all static files when you run `collectstatic`
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -138,3 +137,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
