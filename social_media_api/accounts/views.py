@@ -53,3 +53,8 @@ class FollowUserView(generics.GenericAPIView):
             return Response({"status": f"You unfollowed {target_user.username}"})
         except CustomUser.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class UserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()   # <-- here is where it belongs
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
