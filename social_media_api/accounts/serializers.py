@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from .models import Post, Comment
 
 User = get_user_model()
 
@@ -33,3 +34,18 @@ class UserLoginSerializer(serializers.Serializer):
         if user:
             return user
         raise serializers.ValidationError("Invalid credentials")
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'post', 'author', 'content', 'created_at']
+
+class PostSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ['id', 'author', 'content', 'created_at', 'updated_at', 'comments']
