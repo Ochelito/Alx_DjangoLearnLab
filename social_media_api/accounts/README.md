@@ -208,3 +208,107 @@ All follow and feed operations require authenticated users.
 Feed only displays posts from users the authenticated user is following.
 
 The follow endpoint is idempotent: calling it multiple times toggles the follow status.
+
+
+📖 API Documentation: Likes & Notifications
+🔹 Likes System
+1. Like a Post
+
+Endpoint:
+POST /posts/posts/<int:pk>/like/
+
+Authentication: Required
+
+Description: Allows an authenticated user to like a post. If the user already liked the post, they cannot like it again.
+
+Request Example:
+
+POST /posts/posts/5/like/
+Authorization: Bearer <token>
+
+
+Response Example (201 Created):
+
+{
+  "message": "Post liked."
+}
+
+
+Response Example (400 Bad Request):
+
+{
+  "message": "You have already liked this post."
+}
+
+2. Unlike a Post
+
+Endpoint:
+POST /posts/posts/<int:pk>/unlike/
+
+Authentication: Required
+
+Description: Allows an authenticated user to remove their like from a post.
+
+Request Example:
+
+POST /posts/posts/5/unlike/
+Authorization: Bearer <token>
+
+
+Response Example (200 OK):
+
+{
+  "message": "Post unliked."
+}
+
+
+Response Example (400 Bad Request):
+
+{
+  "message": "You have not liked this post."
+}
+
+🔹 Notifications System
+3. Fetch Notifications
+
+Endpoint:
+GET /notifications/
+
+Authentication: Required
+
+Description: Returns a list of notifications for the logged-in user, with unread notifications shown prominently.
+
+Request Example:
+
+GET /notifications/
+Authorization: Bearer <token>
+
+
+Response Example (200 OK):
+
+[
+  {
+    "id": 1,
+    "actor": "johndoe",
+    "verb": "liked your post",
+    "target": "My First Blog Post",
+    "timestamp": "2025-08-20T10:30:00Z",
+    "read": false
+  },
+  {
+    "id": 2,
+    "actor": "janedoe",
+    "verb": "commented on your post",
+    "target": "My First Blog Post",
+    "timestamp": "2025-08-20T09:45:00Z",
+    "read": true
+  }
+]
+
+🔹 Benefits of These Features
+
+Likes increase engagement by letting users show appreciation for posts.
+
+Notifications improve interaction by keeping users informed when others engage with their content (likes, comments, followers).
+
+Together, these features create a more dynamic and interactive platform.

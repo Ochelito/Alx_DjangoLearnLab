@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/accounts/', include('accounts.urls')),  # user auth & follows
     path('api/posts/', include('posts.urls')),        # posts, comments, feed
+    path('notifications/', include('notifications.urls')),
 ]
    
