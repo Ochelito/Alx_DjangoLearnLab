@@ -19,10 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    # Accounts app
-    path('api/accounts/', include('accounts.urls')),
-
-    # Posts app
-    path('api/', include('posts.urls')),  # posts and comments endpoints
+    path('accounts/', include('accounts.urls')),  # user auth & follows
+    path('posts/', include('posts.urls')),        # posts, comments, feed
 ]
+   

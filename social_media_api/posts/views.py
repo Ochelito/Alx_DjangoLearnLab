@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, filters, generics
 from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
@@ -58,3 +58,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         if instance.author != self.request.user:
             raise permissions.PermissionDenied("You can only delete your own comments.")
         instance.delete()
+
+class UserFeedView(generics.ListAPIView):
+    """
+    Returns posts from users that the authenticated user follows,
+    ordered by most recent first.
+    """
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Get all users the current user is following
+        following_users = self.request.user.following.all()
+        # Return posts authored by those users, newest first
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')

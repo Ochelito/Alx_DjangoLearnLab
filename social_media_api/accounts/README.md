@@ -108,3 +108,103 @@ Use ?search=<keyword> to filter posts/comments by content.
 Token Authentication:
 
 All CRUD operations require Authorization: Token <token> header.
+
+Social Media API – Follows and Feed Documentation
+1. Follow/Unfollow Users
+Endpoint
+POST /accounts/follow/<user_id>/
+
+Description
+
+Toggles the follow status between the authenticated user and the target user:
+
+If already following → unfollow
+
+If not following → follow
+
+Authentication
+
+Required: Token authentication
+
+Request Headers
+Authorization: Token <user-token>
+Content-Type: application/json
+
+URL Parameters
+Parameter	Type	Description
+user_id	int	ID of the user to follow/unfollow
+Sample Request
+POST /accounts/follow/2/
+Authorization: Token 123abc456def
+
+Sample Response
+
+Followed user:
+
+{
+  "detail": "followed bob"
+}
+
+
+Unfollowed user:
+
+{
+  "detail": "unfollowed bob"
+}
+
+2. User Feed
+Endpoint
+GET /posts/feed/
+
+Description
+
+Retrieves posts from users that the authenticated user follows, ordered by newest first.
+
+Authentication
+
+Required: Token authentication
+
+Request Headers
+Authorization: Token <user-token>
+
+Sample Request
+GET /posts/feed/
+Authorization: Token 123abc456def
+
+Sample Response
+[
+  {
+    "id": 5,
+    "author": "bob",
+    "title": "Bob Post 2",
+    "content": "Content 2",
+    "created_at": "2025-08-19T10:30:00Z",
+    "updated_at": "2025-08-19T10:30:00Z"
+  },
+  {
+    "id": 4,
+    "author": "bob",
+    "title": "Bob Post 1",
+    "content": "Content 1",
+    "created_at": "2025-08-19T09:45:00Z",
+    "updated_at": "2025-08-19T09:45:00Z"
+  }
+]
+
+3. User Model Changes
+
+The CustomUser model now includes:
+
+Field	Type	Description
+followers	ManyToManyField (self)	Users who follow this user
+following	ManyToManyField (self)	Users that this user follows
+
+These fields are asymmetrical: following a user does not automatically make them follow you.
+
+4. Notes
+
+All follow and feed operations require authenticated users.
+
+Feed only displays posts from users the authenticated user is following.
+
+The follow endpoint is idempotent: calling it multiple times toggles the follow status.
