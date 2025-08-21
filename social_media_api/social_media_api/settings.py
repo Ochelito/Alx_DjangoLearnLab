@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-aep-*6f-*ce!m1ctby^n!%gn#&y_(9fjenif^w)y%lip2sa!x3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -54,6 +54,19 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Prevents browsers from guessing content types
+SECURE_CONTENT_TYPE_NOSNIFF = True  
+
+# Enables browser XSS filtering
+SECURE_BROWSER_XSS_FILTER = True  
+
+# Prevents your site from being embedded in iframes
+X_FRAME_OPTIONS = "DENY"  
+
+# Redirects all HTTP -> HTTPS (only enable if you have SSL setup)
+SECURE_SSL_REDIRECT = True  
+
+
 ROOT_URLCONF = 'social_media_api.urls'
 
 TEMPLATES = [
@@ -79,8 +92,12 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'social_media_api',
+        'USER': 'root',
+        'PASSWORD': 'Linkwithaugustine@gmail.com',
+        'HOST': 'localhost',   # Or your database server address
+        'PORT': '3306',        # Default MySQL port
     }
 }
 
@@ -120,7 +137,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
