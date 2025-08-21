@@ -94,11 +94,11 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'social_media_api',
-        'USER': 'root',
-        'PASSWORD': 'Linkwithaugustine@gmail.com',
-        'HOST': 'localhost',   # Or your database server address
-        'PORT': '3306',        # Default MySQL port
+        'NAME': os.environ.get("railway"),
+        'USER': os.environ.get("root"),
+        'PASSWORD': os.environ.get("grDQmMKDFPHXWFWrocHrRuIiiCrhsPMB"),
+        'HOST': os.environ.get("mysql.railway.internal"),   # Or your database server address
+        'PORT': os.environ.get("3306"),        # Default MySQL port
     }
 }
 
